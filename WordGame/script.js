@@ -98,12 +98,18 @@ function checkAnswer() {
 }
 
 function nextLevel() {
+    const levelUpSound = new Audio("./sounds/upgrade_level.wav.wav");
+    const gameFinished = new Audio("./sounds/level_completed.wav");
     if (currentIndex < words.length - 1) {
+        levelUpSound.play();
         currentIndex++;
         loadLevel();
     } else {
-        alert("Congratulations! You've completed all levels.");
-        resetGame();
+        gameFinished.play();
+        setTimeout(() => {
+            alert("Congratulations! You've completed all levels.");
+            resetGame();
+        }, 1000); // time delay
     }
 }
 
@@ -125,6 +131,11 @@ function resetGame() {
         letter.style.background = ""; 
         letter.style.pointerEvents = "auto"; 
     });
+    // resets back to lvl 1
+    currentIndex = 0;
+    score = 0;
+    scoreDisplay.textContent = "Score: " + score;
+    loadLevel();
 }
 
 document.getElementById("reset-button").addEventListener("click", resetGame);
