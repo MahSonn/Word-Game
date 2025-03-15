@@ -138,7 +138,50 @@ function resetGame() {
     loadLevel();
 }
 
-document.getElementById("reset-button").addEventListener("click", resetGame);
+function resetLevel() {
+    selectedLetters = []; // Clear selected letters
+    wordContainer.innerHTML = ""; // Clear letter boxes
+    lettersContainer.innerHTML = ""; // Clear letter choices
+
+    // Recreate empty letter boxes
+    for (let i = 0; i < currentWord.length; i++) {
+        const letterBox = document.createElement("div");
+        letterBox.classList.add("letter-box");
+        letterBox.dataset.index = i;
+        wordContainer.appendChild(letterBox);
+    }
+
+    // Shuffle letters and regenerate choices
+    let shuffledLetters = currentWord.split("");
+    while (shuffledLetters.length < 12) {
+        shuffledLetters.push(String.fromCharCode(65 + Math.floor(Math.random() * 26))); 
+    }
+    shuffledLetters = shuffledLetters.sort(() => Math.random() - 0.5);
+
+    // Create new letter choice elements
+    const topRow = document.createElement("div");
+    topRow.classList.add("letter-row");
+    const bottomRow = document.createElement("div");
+    bottomRow.classList.add("letter-row");
+
+    shuffledLetters.forEach((letter, index) => {
+        const letterDiv = document.createElement("div");
+        letterDiv.classList.add("letter");
+        letterDiv.textContent = letter;
+        letterDiv.addEventListener("click", () => selectLetter(letter, letterDiv));
+
+        if (index < 6) {
+            topRow.appendChild(letterDiv);
+        } else {
+            bottomRow.appendChild(letterDiv);
+        }
+    });
+
+    lettersContainer.appendChild(topRow);
+    lettersContainer.appendChild(bottomRow);
+}
+
+document.getElementById("reset-button").addEventListener("click", resetLevel);
 document.addEventListener("keydown", (event) => {
     let pressedKey = event.key.toUpperCase(); // Convert to uppercase
 
