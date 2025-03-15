@@ -84,6 +84,35 @@ function selectLetter(letter) {
     checkAnswer();
 }
 
+document.addEventListener("keydown", function (event) {
+    if (event.key === "Backspace") {
+
+        const filledBoxes = document.querySelectorAll(".letter-box.filled");
+        if (filledBoxes.length > 0) {
+            const lastBox = filledBoxes[filledBoxes.length - 1];
+            const removedLetter = lastBox.textContent;
+
+            // Clear the box
+            lastBox.textContent = "";
+            lastBox.classList.remove("filled");
+
+            const index = selectedLetters.indexOf(removedLetter);
+            if (index !== -1) selectedLetters.splice(index, 1);
+
+
+            const letterElements = document.querySelectorAll(".letter");
+            let letterElement = Array.from(letterElements).find(
+                (el) => el.textContent === removedLetter && el.classList.contains("used")
+            );
+
+            if (letterElement) {
+                letterElement.classList.remove("used");
+                letterElement.style.background = "";
+                letterElement.style.pointerEvents = "auto";
+            }
+        }
+    }
+});
 
 function checkAnswer() {
     if (selectedLetters.join("") === currentWord) {
