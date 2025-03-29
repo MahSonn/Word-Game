@@ -1,6 +1,8 @@
 const words = [
     { answer: "BRIDGE", images: ["images/bridge1.jpg", "images/bridge2.jpg", "images/bridge3.jpg", "images/bridge4.jpg"] },
     { answer: "PLANET", images: ["images/planet1.jpg", "images/planet2.jpg", "images/planet3.jpg", "images/planet4.jpg"] },
+    { answer: "LIGHT", images: ["images/light1.jpg", "images/light2.jpg", "images/light3.jpg", "images/light4.jpg"] },
+    { answer: "ROUND", images: ["images/round1.jpg", "images/round2.jpg", "images/round3.jpg", "images/round4.jpg"] },
     { answer: "LANTERN", images: ["images/lantern1.jpg", "images/lantern2.jpg", "images/lantern3.jpg", "images/lantern4.jpg"] }
 ];
 
@@ -84,45 +86,25 @@ function selectLetter(letter) {
     checkAnswer();
 }
 
-document.addEventListener("keydown", function (event) {
-    if (event.key === "Backspace") {
-
-        const filledBoxes = document.querySelectorAll(".letter-box.filled");
-        if (filledBoxes.length > 0) {
-            const lastBox = filledBoxes[filledBoxes.length - 1];
-            const removedLetter = lastBox.textContent;
-
-            // Clear the box
-            lastBox.textContent = "";
-            lastBox.classList.remove("filled");
-
-            const index = selectedLetters.indexOf(removedLetter);
-            if (index !== -1) selectedLetters.splice(index, 1);
-
-
-            const letterElements = document.querySelectorAll(".letter");
-            let letterElement = Array.from(letterElements).find(
-                (el) => el.textContent === removedLetter && el.classList.contains("used")
-            );
-
-            if (letterElement) {
-                letterElement.classList.remove("used");
-                letterElement.style.background = "";
-                letterElement.style.pointerEvents = "auto";
-            }
-        }
-    }
-});
 
 function checkAnswer() {
-    if (selectedLetters.join("") === currentWord) {
-        score++;
-        scoreDisplay.textContent = "Score: " + score;
-
-        setTimeout(() => {
-            wordContainer.classList.remove("word-correct");
-            nextLevel();
-        }, 500);
+    if (selectedLetters.length === currentWord.length) { 
+        if (selectedLetters.join("") === currentWord) {
+            score++;
+            scoreDisplay.textContent = "Score: " + score;
+            
+            alert("Correct!");
+            
+            wordContainer.classList.add("word-correct");
+            
+            setTimeout(() => {
+                wordContainer.classList.remove("word-correct");
+                nextLevel();
+            }, 500);
+        } else {
+            alert("Incorrect! Try again.");
+            resetGame();
+        }
     }
 }
 
@@ -212,9 +194,9 @@ function resetLevel() {
 
 document.getElementById("reset-button").addEventListener("click", resetLevel);
 document.addEventListener("keydown", (event) => {
-    let pressedKey = event.key.toUpperCase(); // Convert to uppercase
+    let pressedKey = event.key.toUpperCase(); 
 
-    if (pressedKey.match(/^[A-Z]$/)) { // Ensure only letters (A-Z)
+    if (pressedKey.match(/^[A-Z]$/)) { 
         selectLetter(pressedKey);
     }
 });
